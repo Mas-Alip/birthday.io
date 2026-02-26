@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Risma 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#a0c4ff,#ffc6ff);
+  overflow:hidden;
+  color:#fff;
+}
+
+/* SCREEN */
+.screen{
+  position:fixed;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  transition:0.6s ease;
+}
+
+.hidden{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(0.95);
+}
+
+/* TEXT */
+h1{
+  font-family:'Great Vibes';
+  font-size:2.8em;
+  margin:10px;
+}
+
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:25px;
+  background:#ff8fab;
+  color:#fff;
+  cursor:pointer;
+  margin-top:20px;
+}
+
+/* ENVELOPE */
+.envelope{
+  width:200px;
+  height:120px;
+  background:#fff;
+  border-radius:10px;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+}
+
+.flap{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#ffc6ff;
+  clip-path:polygon(0 0,50% 50%,100% 0);
+  transform-origin:top;
+  transition:0.6s;
+}
+
+.open .flap{
+  transform:rotateX(180deg);
+}
+
+/* GALLERY */
+.gallery{
+  display:flex;
+  gap:10px;
+}
+.gallery img{
+  width:90px;
+  border-radius:10px;
+}
+
+/* BALLOON */
+.balloon{
+  position:fixed;
+  bottom:-80px;
+  width:30px;
+  height:45px;
+  border-radius:50%;
+  animation:up 6s linear forwards;
+}
+
+@keyframes up{
+  to{transform:translateY(-120vh);}
+}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  width:6px;
+  height:6px;
+  background:white;
+  top:-10px;
+  animation:fall 4s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music">
+<source src="hbd.mp3">
+</audio>
+
+<!-- 1 -->
+<div class="screen" id="s1">
+  <h2>Tap to Open 💌</h2>
+  <div class="envelope" onclick="openEnvelope(this)">
+    <div class="flap"></div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="screen hidden" id="s2">
+  <h2>Happy Sweet 20th 🎉</h2>
+  <h1>Risma Tulhidayah 💖</h1>
+  <p>28 Februari 2026</p>
+  <button onclick="next(2)">Next</button>
+</div>
+
+<!-- 3 -->
+<div class="screen hidden" id="s3">
+  <h2>Pretty Girl Picture 💕</h2>
+  <div class="gallery">
+    <img src="1.jpg">
+    <img src="2.jpg">
+  </div>
+  <button onclick="next(3)">Next</button>
+</div>
+
+<!-- 4 -->
+<div class="screen hidden" id="s4">
+  <h1>I Love You 💙</h1>
+  <p>Selalu jadi bahagiaku ✨</p>
+</div>
+
+<script>
+const music=document.getElementById("music");
+
+/* OPEN */
+function openEnvelope(el){
+  el.classList.add("open");
+
+  music.play().catch(()=>{});
+
+  setTimeout(()=>next(1),600);
+}
+
+/* NEXT */
+function next(n){
+  document.getElementById("s"+n).classList.add("hidden");
+  document.getElementById("s"+(n+1)).classList.remove("hidden");
+
+  if(n===3){
+    effects();
+  }
+}
+
+/* EFFECT */
+function effects(){
+  // balloon
+  for(let i=0;i<15;i++){
+    let b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*100+"%";
+    b.style.background=["#ff8fab","#ffc6ff","#a0c4ff"][Math.floor(Math.random()*3)];
+    document.body.appendChild(b);
+  }
+
+  // confetti
+  for(let i=0;i<40;i++){
+    let c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"%";
+    c.style.background=["#fff","#ff8fab","#a0c4ff"][Math.floor(Math.random()*3)];
+    document.body.appendChild(c);
+  }
+}
+</script>
+
+</body>
+</html>
