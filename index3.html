@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Risma </title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  font-family:'Poppins',sans-serif;
+  background: radial-gradient(circle at top,#a0c4ff,#ffc6ff);
+  color:#fff;
+}
+
+.screen{
+  position:absolute;
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  transition:1s ease;
+}
+
+.hidden{
+  opacity:0;
+  transform:scale(1.1) blur(10px);
+  pointer-events:none;
+}
+
+/* TEXT */
+h1{font-family:'Great Vibes'; font-size:3em;}
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  cursor:pointer;
+}
+
+/* ENVELOPE */
+.envelope{
+  width:220px;
+  height:140px;
+  background:#fff;
+  position:relative;
+  border-radius:10px;
+  cursor:pointer;
+}
+.flap{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#ffc6ff;
+  clip-path:polygon(0 0,50% 50%,100% 0);
+  transform-origin:top;
+  transition:1s;
+}
+.open .flap{
+  transform:rotateX(180deg);
+}
+
+/* GALLERY */
+img{
+  width:220px;
+  border-radius:15px;
+  margin:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* BALLOON */
+.balloon{
+  position:absolute;
+  width:40px;
+  height:60px;
+  border-radius:50%;
+  bottom:-100px;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0);}
+  100%{transform:translateY(-120vh);}
+}
+
+/* CONFETTI */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music">
+<source src="hbd.mp3">
+</audio>
+
+<!-- 1 OPEN -->
+<div class="screen" id="s1">
+  <h2>Tap to Open </h2>
+  <div class="envelope" onclick="openEnvelope(this)">
+    <div class="flap"></div>
+  </div>
+</div>
+
+<!-- 2 UCAPAN -->
+<div class="screen hidden" id="s2">
+  <h2>Happy Sweet 20th </h2>
+  <h1>Risma Tulhidayah </h1>
+  <p>28 Februari 2026</p>
+  <button onclick="next(2)">Next </button>
+</div>
+
+<!-- 3 GALERI -->
+<div class="screen hidden" id="s3">
+  <h2>Pretty Girl Picture </h2>
+  <img src="1.jpg">
+  <img src="2.jpg">
+  <button onclick="next(3)">Next </button>
+</div>
+
+<!-- 4 FINAL -->
+<div class="screen hidden" id="s4">
+  <h1>I Love You </h1>
+  <p>Selalu jadi alasan bahagiaku </p>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+const music = document.getElementById("music");
+
+/* OPEN ENVELOPE */
+function openEnvelope(el){
+  el.classList.add("open");
+
+  music.play().catch(()=>{});
+
+  setTimeout(()=>{
+    next(1);
+  },1000);
+}
+
+/* NAVIGATION */
+function next(step){
+  document.getElementById("s"+step).classList.add("hidden");
+  document.getElementById("s"+(step+1)).classList.remove("hidden");
+
+  if(step===3){
+    startEffects();
+  }
+}
+
+/* BALLOON + CONFETTI */
+function startEffects(){
+  // balloons
+  for(let i=0;i<25;i++){
+    let b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*100+"%";
+    b.style.background=["#ff8fab","#a0c4ff","#ffc6ff","#ffffff"][Math.floor(Math.random()*4)];
+    b.style.animationDuration=(4+Math.random()*4)+"s";
+    document.body.appendChild(b);
+  }
+
+  // confetti
+  const canvas=document.getElementById("confetti");
+  const ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+
+  let pieces=[];
+  for(let i=0;i<150;i++){
+    pieces.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*6+2,
+      d:Math.random()*100
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=["#fff","#ff8fab","#a0c4ff"][Math.floor(Math.random()*3)];
+      ctx.fill();
+    });
+    update();
+  }
+
+  function update(){
+    pieces.forEach(p=>{
+      p.y+=2;
+      if(p.y>canvas.height) p.y=0;
+    });
+  }
+
+  setInterval(draw,30);
+}
+</script>
+
+</body>
+</html>
